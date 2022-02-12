@@ -1,5 +1,5 @@
 import { useAccount } from '../../contexts/AccountContext';
-import { contractStoryTech } from '../../utils/web3';
+import { contractStoryTech } from '../../services/web3';
 
 import styles from './styles.module.scss';
 
@@ -31,7 +31,7 @@ export function SubscribeButton({ price }: SubscribeButtonProps) {
 			type="button"
 			className={styles.subscribeButton}
 			onClick={handleSubscribe}
-			disabled={account.subscriber}
+			disabled={account?.subscriber}
 		>
 			{account?.subscriber ? 'Subscriber' : 'Subscribe now'}
 		</button>

@@ -8,7 +8,7 @@ import {
 	useState,
 } from 'react';
 
-import { web3, contractStoryTech } from '../utils/web3';
+import { web3, contractStoryTech } from '../services/web3';
 
 type Account = {
 	address: string;

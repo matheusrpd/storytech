@@ -1,7 +1,11 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
+
 import { useAccount } from '../../contexts/AccountContext';
+import { getPrismicClient } from '../../services/prismic';
 
 import styles from '../../styles/articles.module.scss';
 
@@ -14,20 +18,43 @@ type Article = {
 
 export default function Articles() {
 	const { account } = useAccount();
+	const [articles, setArticles] = useState<Article[]>();
 
-	const [articles, setArticles] = useState<Article[]>([
-		{
-			slug: 'nextjs-novidades-na-versao-10',
-			title: 'NextJS: Novidades na versão 10',
-			excerpt:
-				'Se você nos acompanhou nos últimos posts, já viu que criamos um blog com um contador de visitas usando o MongoDB e Next.js, depois adicionamos a funcionalidade de dark mode.',
-			updatedAt: new Date(Date.now()).toLocaleDateString('pt-BR', {
-				day: '2-digit',
-				month: 'long',
-				year: 'numeric',
-			}),
-		},
-	]);
+	const prismic = getPrismicClient();
+
+	useEffect(() => {
+		async function loadArticles() {
+			const response = await prismic.query<any>(
+				[Prismic.predicates.at('document.type', 'post')],
+				{
+					fetch: ['post.title', 'post.content'],
+					pageSize: 100,
+				}
+			);
+
+			const articles = response.results.map((article) => {
+				return {
+					slug: article.uid,
+					title: RichText.asText(article.data.title),
+					excerpt:
+						article.data.content.find((content) => content.type === 'paragraph')
+							?.text ?? '',
+					updatedAt: new Date(article.last_publication_date).toLocaleDateString(
+						'pt-BR',
+						{
+							day: '2-digit',
+							month: 'long',
+							year: 'numeric',
+						}
+					),
+				};
+			});
+
+			setArticles(articles);
+		}
+
+		loadArticles();
+	}, [prismic]);
 
 	return (
 		<>
@@ -37,7 +64,7 @@ export default function Articles() {
 
 			<main className={styles.container}>
 				<div className={styles.articles}>
-					{articles.map((article) => (
+					{articles?.map((article) => (
 						<Link
 							href={
 								account?.subscriber
