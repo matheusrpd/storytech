@@ -17,4 +17,8 @@
 	&:hover {
 		filter: brightness(0.8);
 	}
+
+	&:disabled {
+		background-color: var(--gray-300);
+	}
 }

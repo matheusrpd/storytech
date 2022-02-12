@@ -31,6 +31,7 @@ export function SubscribeButton({ price }: SubscribeButtonProps) {
 			type="button"
 			className={styles.subscribeButton}
 			onClick={handleSubscribe}
+			disabled={account.subscriber}
 		>
 			{account?.subscriber ? 'Subscriber' : 'Subscribe now'}
 		</button>
