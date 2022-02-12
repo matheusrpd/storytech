@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useAccount } from '../../contexts/AccountContext';
 
 import styles from '../../styles/article.module.scss';
 
@@ -11,6 +13,15 @@ type Article = {
 };
 
 export default function Article() {
+	const { account, isAuthenticated } = useAccount();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!isAuthenticated || !account?.subscriber) {
+			router.push('/');
+		}
+	}, [router, account, isAuthenticated]);
+
 	const [article, setArticle] = useState<Article>({
 		slug: 'nextjs-novidades-na-versao-10',
 		title: 'NextJS: Novidades na versão 10',

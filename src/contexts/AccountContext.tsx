@@ -18,6 +18,7 @@ type Account = {
 type AccountContextData = {
 	signIn: () => Promise<void>;
 	signOut: () => void;
+	updateAccount: (account: Account) => void;
 	isAuthenticated: boolean;
 	account: Account | null;
 };
@@ -82,6 +83,10 @@ export function AccountProvider({ children }: AuthProviderProps) {
 		setAccount(null);
 	}
 
+	async function updateAccount(account: Account) {
+		setAccount(account);
+	}
+
 	async function isSubscriber(address: string) {
 		let response = false;
 
@@ -101,6 +106,7 @@ export function AccountProvider({ children }: AuthProviderProps) {
 			value={{
 				signIn,
 				signOut,
+				updateAccount,
 				isAuthenticated,
 				account,
 			}}

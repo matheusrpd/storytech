@@ -1,12 +1,13 @@
 declare let window: any;
 
 import Web3 from 'web3';
+import { Contract } from 'web3-eth-contract';
 import { AbiItem } from 'web3-utils';
 
 import ABI from '../abi.json';
 
-let web3;
-let contractStoryTech;
+let web3: Web3;
+let contractStoryTech: Contract;
 
 if (typeof window !== 'undefined') {
   const { ethereum } = window;

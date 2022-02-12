@@ -1,3 +1,6 @@
+import { useAccount } from '../../contexts/AccountContext';
+import { contractStoryTech } from '../../utils/web3';
+
 import styles from './styles.module.scss';
 
 interface SubscribeButtonProps {
@@ -5,7 +8,23 @@ interface SubscribeButtonProps {
 }
 
 export function SubscribeButton({ price }: SubscribeButtonProps) {
-	async function handleSubscribe() {}
+	const { account, updateAccount } = useAccount();
+
+	async function handleSubscribe() {
+		try {
+			await contractStoryTech.methods.signature().send({
+				from: account.address,
+				value: price,
+			});
+
+			updateAccount({
+				address: account.address,
+				subscriber: true,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<button
@@ -13,7 +32,7 @@ export function SubscribeButton({ price }: SubscribeButtonProps) {
 			className={styles.subscribeButton}
 			onClick={handleSubscribe}
 		>
-			Subscribe now
+			{account?.subscriber ? 'Subscriber' : 'Subscribe now'}
 		</button>
 	);
 }

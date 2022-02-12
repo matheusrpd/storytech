@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAccount } from '../../contexts/AccountContext';
 
 import styles from '../../styles/articles.module.scss';
 
@@ -12,6 +13,8 @@ type Article = {
 };
 
 export default function Articles() {
+	const { account } = useAccount();
+
 	const [articles, setArticles] = useState<Article[]>([
 		{
 			slug: 'nextjs-novidades-na-versao-10',
@@ -34,12 +37,19 @@ export default function Articles() {
 
 			<main className={styles.container}>
 				<div className={styles.articles}>
-					{articles.map((post) => (
-						<Link href={`/articles/${post.slug}`} key={post.slug}>
+					{articles.map((article) => (
+						<Link
+							href={
+								account?.subscriber
+									? `/articles/${article.slug}`
+									: `/articles/preview/${article.slug}`
+							}
+							key={article.slug}
+						>
 							<a>
-								<time>{post.updatedAt}</time>
-								<strong>{post.title}</strong>
-								<p>{post.excerpt}</p>
+								<time>{article.updatedAt}</time>
+								<strong>{article.title}</strong>
+								<p>{article.excerpt}</p>
 							</a>
 						</Link>
 					))}
