@@ -1,9 +1,13 @@
+import { useAccount } from '../../contexts/AccountContext';
+
 import { ActiveLink } from '../ActiveLink';
 import { SignInButton } from '../SignInButton';
 
 import styles from './styles.module.scss';
 
 export function Header() {
+	const { signIn, signOut } = useAccount();
+
 	return (
 		<header className={styles.headerContainer}>
 			<div className={styles.headerContent}>
@@ -20,7 +24,7 @@ export function Header() {
 					</ActiveLink>
 				</nav>
 
-				<SignInButton />
+				<SignInButton handleSignIn={signIn} handleSignOut={signOut} />
 			</div>
 		</header>
 	);

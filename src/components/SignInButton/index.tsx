@@ -1,30 +1,39 @@
 import { FaWallet } from 'react-icons/fa';
+import { useAccount } from '../../contexts/AccountContext';
+import { formatAddressWallet } from '../../utils/formatAddressWallet';
+import { FiX } from 'react-icons/fi';
 
 import styles from './styles.module.scss';
 
-export function SignInButton() {
-	// const [session] = useSession();
+interface SignInButtonProps {
+	handleSignIn: () => void;
+	handleSignOut: () => void;
+}
 
-	// return session ? (
-	// <button
-	// 	type="button"
-	// 	className={styles.signInButton}
-	// 	// onClick={() => signOut()}
-	// >
-	// 	<FaGithub color="#04d361" />
-	// 	{session.user.name}
-	// 	<FiX color="#737380" className={styles.closeIcon} />
-	// </button>;
-	// ) : (
-	return (
+export function SignInButton({
+	handleSignIn,
+	handleSignOut,
+}: SignInButtonProps) {
+	const { account, isAuthenticated } = useAccount();
+
+	return isAuthenticated ? (
 		<button
 			type="button"
 			className={styles.signInButton}
-			// onClick={() => signIn('github')}
+			onClick={handleSignOut}
+		>
+			<FaWallet color="#eba417" />
+			{formatAddressWallet(account.address)}
+			<FiX color="#737380" className={styles.closeIcon} />
+		</button>
+	) : (
+		<button
+			type="button"
+			className={styles.signInButton}
+			onClick={handleSignIn}
 		>
 			<FaWallet color="#eba417" />
 			Connect to MetaMask
 		</button>
 	);
-	// );
 }
